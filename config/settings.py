@@ -17,9 +17,7 @@ import os
 import ldap
 from django_auth_ldap.config import LDAPSearch, LDAPSearchUnion
 
-AUTH_LDAP_SERVER_URI = 'ldap://DLT-BSH-AD01.dalet.local'
-AUTH_LDAP_BIND_DN = "CN=Domain Azure,CN=Users,DC=dalet,DC=local"
-AUTH_LDAP_BIND_PASSWORD = "D@l3t2019"
+
 
 AUTH_LDAP_USER_SEARCH = LDAPSearchUnion(
     LDAPSearch("OU=Migrated,OU=Users,OU=BeerSheba,OU=Israel,OU=Asia,DC=dalet,DC=local", ldap.SCOPE_SUBTREE, "(sAMAccountName=%(user)s)"),
