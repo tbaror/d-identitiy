@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static from static %}
+
+
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-light navbar-expand-md">
+        <div class="container"><a class="navbar-brand" href="#"><img src="{% static 'assets/img/logo.png' %}" style="width: 100px;"></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <h1 class="text-center">Profile Information<br></h1>
+    <hr>
+    <div class="card">
+        <div class="card-body">
+            <div class="media">
+                <div class="mr-3 ml-3"><i class="fa fa-user-circle" style="font-size: 40px;"></i></div>
+                <div class="media-body">
+                    <ul class="list-unstyled fa-ul">
+                        <li><i class="fa fa-user fa-li" style="font-size: 20px;"></i><strong>User Name:</strong> {{ user.username }}</li>
+                        <li class="mb-2"><i class="far fa-user fa-li" style="font-size: 20px;"></i><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</li>
+                        <li class="mb-2"><i class="fa fa-envelope fa-li" style="font-size: 20px;"></i><strong>Email:</strong> {{ user.email }} </li>
+                        <li class="mb-2"><i class="fas fa-mobile-alt fa-li" style="font-size: 20px;"></i><strong>Mobile Phone:</strong> (555) 555-5555</li>
+                        <li><i class="fab fa-codepen fa-li" style="font-size: 20px;"></i><strong>Department:</strong>&nbsp;Projects</li>
+                    </ul>
+                </div>
+            </div>
+            <div></div>
+            <hr style="color: rgb(23,24,25);">
+            <div class="ml-3">
+                <p><i class="fas fa-location-arrow fa-fw" style="font-size: 20px;"></i>&nbsp;<strong>Geo Location:</strong>&nbsp;16 Rue Rivay, 92300 Levallois-Perret<br>
+<span class="text-muted"><i class="fa fa-calendar fa-fw"></i> May 12, 2016</span></p>
+            </div>
+        </div>
+    </div>
+    <div class="text-center" style="text-align: right;"><button class="btn btn-outline-primary" type="button" style="color: rgb(255,255,255);background: rgb(2,79,161);">Change Password</button><button class="btn btn-outline-primary ml-3" type="button" style="color: rgb(255,255,255);background: rgb(64,108,8);">Logout</button></div>
+
+
+{% endblock %}
