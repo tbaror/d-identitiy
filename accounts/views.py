@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from .forms import *
 import ldap3
+from decouple import config
 
 
 class UsersLoginView(LoginView):
@@ -45,7 +46,7 @@ class ChangeUserPassword(CreateView):
         )
 
         return initial
-        SERVER='212.143.237.33'
+AUTH_SERVER= config('AUTH_SERVER')
 BASEDN="DC=dalet,DC=local"
 USER="pwmtest@dalet.com"
 CURREENTPWD="Esprit@1234"
@@ -55,7 +56,7 @@ SEARCHFILTER='(&(|(userPrincipalName='+USER+')(samaccountname='+USER+')(mail='+U
 
 USER_DN=""
 
-ldap_server = ldap3.Server(SERVER, get_info=ldap3.ALL)
+ldap_server = ldap3.Server(AUTH_SERVER, get_info=ldap3.ALL)
 conn = ldap3.Connection(ldap_server, USER, CURREENTPWD, auto_bind=True)
 conn.start_tls()
 
