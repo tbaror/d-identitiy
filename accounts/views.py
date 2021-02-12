@@ -47,7 +47,7 @@ class ChangeUserPassword(CreateView):
 
         return initial
 AUTH_SERVER= config('AUTH_SERVER')
-BASEDN="DC=dalet,DC=local"
+BASEDN= config('BASEDN')
 USER="pwmtest@dalet.com"
 CURREENTPWD="Esprit@1234"
 NEWPWD="Gfn@12345"
