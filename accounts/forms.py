@@ -23,21 +23,15 @@ class UserLoginForm(UserCreationForm):
         }
 
 
-class CreateUserForm(UserCreationForm):
+class UserChangePasswordForm(forms.Form):
+    
+    currentpass = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password', 'name': 'currentpass', 'placeholder':'Current Password'}))
+    newpassword = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password', 'name': 'currentpass', 'placeholder':'New Password'}))
+    confirmpassword = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'type': 'password', 'name': 'confirmpassword', 'placeholder':'Password Confirm'}))
 
-    password1 = forms.CharField(
-        label="Password",
-        widget=forms.PasswordInput(attrs={'class':'pass', 'type':'password', 'align':'center', 'placeholder':'password'}),
-    )
-    password2 = forms.CharField(
-        label="Confirm password",
-        widget=forms.PasswordInput(attrs={'class':'pass', 'type':'password', 'align':'center', 'placeholder':'password'}),
-    )
+    """ class Meta:
+        fields = ['currentpass',
+                'newpassword',
+                'confirmpassword',
 
-    class Meta:
-        model = User
-        fields = ['username', 'email']
-        widgets={
-            'username': forms.TextInput(attrs={'class':'un', 'type':'text', 'align':'center', 'placeholder':'UserName'}),
-            'email':forms.TextInput(attrs={'class':'un', 'type':'text', 'align':'center', 'placeholder':'Email'}),
-        }
+        ] """
