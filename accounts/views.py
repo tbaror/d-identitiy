@@ -31,18 +31,16 @@ class ChangeUserPassword(View):
     #success_url = reverse_lazy('loader_success')
 
     def get(self, request):
-        current_user = request.user
-        context = {'form' : current_user}
-        return render(request, self.template_name, context)
+        """ current_user = request.user
+        context = {'form' : current_user} """
+        return render(request, self.template_name)
 
     def post(self, request):
         PassForm = ""
         #form = PassForm()
         if request.method == 'POST':
-            form = PassForm(request.POST)
-
-            if form.is_valid():
-                current_user = request.user
-                print(current_user)
+            username = request.POST['current_password']
+            current_user = request.user
+            #print(current_user)
 
 
