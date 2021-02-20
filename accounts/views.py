@@ -28,7 +28,7 @@ class ChangeUserPassword(View):
     AUTH_SERVER = config('AUTH_SERVER')
     BASEDN = config('BASEDN')
     #form_class = UserChangePasswordForm
-    #success_url = reverse_lazy('loader_success')
+    success_url = reverse_lazy('profile')
 
     def get(self, request):
         """ current_user = request.user
@@ -39,8 +39,14 @@ class ChangeUserPassword(View):
         PassForm = ""
         #form = PassForm()
         if request.method == 'POST':
-            username = request.POST['current_password']
-            current_user = request.user
-            #print(current_user)
+            current_password = request.POST.get('current_password')
+            new_password = request.POST.get('user_password')
+            current_user = 'request.user'
+            formdata = {'current_password': current_password, 'new_password': new_password, 'current_user': current_user }
+            
+            print(formdata)
+            return render(formdata)
+        else:
+            print('error')    
 
 
