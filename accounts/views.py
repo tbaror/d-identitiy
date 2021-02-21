@@ -41,11 +41,11 @@ class ChangeUserPassword(View):
         if request.method == 'POST':
             current_password = request.POST.get('current_password')
             new_password = request.POST.get('user_password')
-            current_user = 'request.user'
-            formdata = {'current_password': current_password, 'new_password': new_password, 'current_user': current_user }
+            current_user = request.user
+            formdata = {'current_password': current_password, 'new_password': new_password, 'current_user': current_user.username }
             
             print(formdata)
-            return render(formdata)
+            return render(request, self.template_name, formdata)
         else:
             print('error')    
 
