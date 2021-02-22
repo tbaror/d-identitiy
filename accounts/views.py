@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView
 from django.views.generic.base import TemplateView
@@ -43,6 +44,7 @@ class ChangeUserPassword(View):
             new_password = request.POST.get('user_password')
             current_user = request.user
             formdata = {'current_password': current_password, 'new_password': new_password, 'current_user': current_user.username }
+            messages.success(self.request, 'Form submission successful')
             
             print(formdata)
             return render(request, self.template_name, formdata)
