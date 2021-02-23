@@ -43,9 +43,39 @@ class ChangeUserPassword(View):
             current_password = request.POST.get('current_password')
             new_password = request.POST.get('user_password')
             current_user = request.user
+            USER = current_user.username + '@dalet.com'
+            CURREENTPWD = current_password
+            NEWPWD = new_password
             formdata = {'current_password': current_password, 'new_password': new_password, 'current_user': current_user.username }
-            messages.success(self.request, 'Form submission successful')
             
+            try:
+                SEARCHFILTER='(&(|(userPrincipalName='+USER+')(samaccountname='+USER+')(mail='+USER+'))(objectClass=person))'
+
+                USER_DN=""
+
+                ldap_server = ldap3.Server(self.AUTH_SERVER, get_info=ldap3.ALL)
+                conn = ldap3.Connection(ldap_server, USER, CURREENTPWD, auto_bind=True)
+                conn.start_tls()
+
+                print(conn)
+
+                conn.search(search_base = self.BASEDN,
+                search_filter = SEARCHFILTER,
+                search_scope = ldap3.SUBTREE,
+                attributes = ['cn', 'givenName'],
+                paged_size = 5)
+
+                for entry in conn.response:
+                    if entry.get("dn") and entry.get("attributes"):
+                        if entry.get("attributes").get("cn"):
+                            USER_DN=entry.get("dn")
+                messages.success(self.request, 'Password has been changed successfully.')
+                print (USER_DN)
+                print (ldap3.extend.microsoft.modifyPassword.ad_modify_password(conn, USER_DN, NEWPWD, CURREENTPWD,  controls=None))
+            except Exception as e:
+                messages.warning(self.request, e)
+                print(e)
+                        
             print(formdata)
             return render(request, self.template_name, formdata)
         else:

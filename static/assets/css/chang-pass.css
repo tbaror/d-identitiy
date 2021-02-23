@@ -1,3 +1,16 @@
+.bg {  
+  
+  background-image: url('/static/assets/img/laptopkey.jpg');
+  width: 25%;
+   position: absolute;
+   left: 0px;
+   top: 0px;
+   height: 100%;
+   background-repeat: no-repeat;
+   background-size: cover;
+    
+ }
+ 
 .row{
     margin-top: 50px;
     margin-bottom: 50px;
@@ -63,7 +76,7 @@
   }
   .btn-fb{
       color: #fff;
-      background-color:#3b5998;
+      background-color:#172b55;
   }
   .btn-fb:hover{
       color: #fff;
