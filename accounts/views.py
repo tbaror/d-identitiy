@@ -82,3 +82,11 @@ class ChangeUserPassword(View):
             print('error')    
 
 
+class ResetPass(View):
+    def get(self, request):
+        template_name = "resetform.html"
+        return render(request, template_name)
+
+
+    def post(self, request):
+        pass    
