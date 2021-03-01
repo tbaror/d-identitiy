@@ -10,6 +10,7 @@ from django.views import generic
 from .forms import *
 import ldap3
 from decouple import config
+import ssl
 
 
 class UsersLoginView(LoginView):
@@ -83,10 +84,25 @@ class ChangeUserPassword(View):
 
 
 class ResetPass(View):
+
+    BASEDN= config('BASEDN')
+    AUTH_SRV = config('AUTH_SRV')
+    SVCUSER = config('SVCUSER')
+    SVCPASS = config('SVCPASS')
+
     def get(self, request):
         template_name = "resetform.html"
         return render(request, template_name)
 
 
     def post(self, request):
-        pass    
+        if request.method == 'POST':
+            first_name = request.POST.get('first-name')
+            last_name  = request.POST.get('last-name')
+            email = request.POST.get('email')
+            message = request.POST.get('message')
+
+            try:
+
+
+            
