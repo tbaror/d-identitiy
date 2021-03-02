@@ -107,7 +107,7 @@ class ResetPass(View):
             last_name  = request.POST.get('last-name')
             email = request.POST.get('email')
             message = request.POST.get('message')
-            print(email)
+            
 #Get User & validate info from AD
             try:
                 #Try to connect
@@ -140,15 +140,17 @@ class ResetPass(View):
                     attributes='*'
                     )
 
-                user_attrib[0] = c.entries[0].mail.values
-                user_attrib[1] = c.entries[0].givenName.values
-                user_attrib[2] = c.entries[0].sn.values
-                print(user_attrib[2])
+                user_email = c.entries[0].mail.values
+                user_givenname = c.entries[0].givenName.values
+                user_sn = c.entries[0].sn.values
+                
                 c.unbind()
-                if email == user_attrib[0] and first_name == user_attrib[1] and last_name == user_attrib[2]:
+                if email == user_email[0] and first_name == user_givenname[0] and last_name == user_sn[0]:
                     print("match")
                 else:
                     print('not match')
+                    print( email , user_email[0], first_name, user_givenname[0], last_name, user_sn[0])
                 return render(request, template_name)
             except Exception as e:
-                print(e)        
+                print(e)
+                return render(request, template_name)     
