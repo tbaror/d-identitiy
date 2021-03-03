@@ -88,7 +88,7 @@ class ChangeUserPassword(View):
             print('error')    
 
 
-class ResetPass(View):
+class ResetRequestForm(View):
 
     BASEDN= config('BASEDN')
     AUTH_SRV = config('AUTH_SRV')
@@ -108,7 +108,7 @@ class ResetPass(View):
             email = request.POST.get('email')
             message = request.POST.get('message')
             
-#Get User & validate info from AD
+    #Get User & validate info from AD
             try:
                 #Try to connect
                 USER_DN = ""
@@ -147,10 +147,19 @@ class ResetPass(View):
                 c.unbind()
                 if email == user_email[0] and first_name == user_givenname[0] and last_name == user_sn[0]:
                     print("match")
+                    request.session['email'] = user_email[0]
+            return redirect('viewparam/')
                 else:
                     print('not match')
                     print( email , user_email[0], first_name, user_givenname[0], last_name, user_sn[0])
                 return render(request, template_name)
             except Exception as e:
                 print(e)
-                return render(request, template_name)     
+                return render(request, template_name)   
+
+
+
+class TokenChalengeView(View):
+    
+    template_name = ".html"
+                  
