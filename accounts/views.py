@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView
 from django.views.generic.base import TemplateView
@@ -9,6 +10,8 @@ from django.urls import reverse_lazy
 from django.views import generic
 from .forms import *
 #import ldap3
+import time
+import pyotp
 from ldap3 import *
 from decouple import config
 import ssl
@@ -94,6 +97,7 @@ class ResetRequestForm(View):
     AUTH_SRV = config('AUTH_SRV')
     SVCUSER = config('SVCUSER')
     SVCPASS = config('SVCPASS')
+    OTP_NUMLEN = config('OTP_NUMLEN')
 
     def get(self, request):
         template_name = "resetform.html"
@@ -148,7 +152,17 @@ class ResetRequestForm(View):
                 if email == user_email[0] and first_name == user_givenname[0] and last_name == user_sn[0]:
                     print("match")
                     request.session['email'] = user_email[0]
-            return redirect('viewparam/')
+
+                    secret = pyotp.random_base32()
+                    totp = pyotp.TOTP(secret, interval=int(self.OTP_NUMLEN))
+                    now = time.time()
+                    totp.at(now)
+                    
+                    request.session['otp'] = otp = totp.now()
+                    request.session['secret'] = secret
+
+                    print('OTP code:', totp.now())
+                    return redirect('tokenchalenge')
                 else:
                     print('not match')
                     print( email , user_email[0], first_name, user_givenname[0], last_name, user_sn[0])
@@ -161,5 +175,51 @@ class ResetRequestForm(View):
 
 class TokenChalengeView(View):
     
-    template_name = ".html"
+    template_name = "token_chalenge.html"
+    OTP_NUMLEN = config('OTP_NUMLEN')
+
+
+    def get(self, request):
+
+        context = {}
+        
+        user_email = request.session.get('email')
+        if user_email == None:
+           return redirect('resetpass')
+        print(user_email)
+        context['form']= user_email
+
+        return render(request, self.template_name, context)
+
+
+
+    def post(self, request):
+        context = {}
+        token_resp = ""
+
+        if request.method == 'POST':
+            totp = pyotp.TOTP(request.session.get('secret'), interval=int(self.OTP_NUMLEN))
+
+            token_resp = str(request.POST.get('token_input'))
+            otp = totp.verify(token_resp)
+            if otp == True:
+                print('bingo')
+            else:
+                print('try again')     
+
+            context['token_resp' ]= token_resp
+
+        return render(request, self.template_name, context)
+
+
+
+class ResetActionView(View):
+
+    def get(self, request):
+        pass
+
+    def post(self, request):
+        pass
+
+
                   
