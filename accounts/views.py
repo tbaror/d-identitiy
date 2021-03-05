@@ -204,6 +204,7 @@ class TokenChalengeView(View):
             otp = totp.verify(token_resp)
             if otp == True:
                 print('bingo')
+                return redirect('resetaction')
             else:
                 print('try again')     
 
@@ -214,9 +215,11 @@ class TokenChalengeView(View):
 
 
 class ResetActionView(View):
+    template_name = 'password_reset.html'
 
     def get(self, request):
-        pass
+        
+         return render(request, self.template_name)
 
     def post(self, request):
         pass
