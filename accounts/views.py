@@ -204,9 +204,12 @@ class TokenChalengeView(View):
             otp = totp.verify(token_resp)
             if otp == True:
                 print('bingo')
+                request.session['otp_resualt'] = True
+
                 return redirect('resetaction')
             else:
-                print('try again')     
+                print('try again')
+                request.session['otp_resualt'] = False     
 
             context['token_resp' ]= token_resp
 
@@ -218,8 +221,16 @@ class ResetActionView(View):
     template_name = 'password_reset.html'
 
     def get(self, request):
-        
-         return render(request, self.template_name)
+
+        user_email = request.session.get('email')
+        otp_resualt = request.session.get('otp_resualt')
+        if otp_resualt==True and user_email != None:
+            pass
+        else:
+            return redirect('/')
+
+
+        return render(request, self.template_name)
 
     def post(self, request):
         pass
