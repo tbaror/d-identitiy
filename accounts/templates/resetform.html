@@ -29,6 +29,21 @@
 <!--===============================================================================================-->
 </head>
 <body>
+	{% if messages %}
+          
+         
+        {% for message in messages %}
+        {% if message.tags %}
+
+        <div class="alert alert-info alert-dismissible fade show">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Info!</strong> Sorry we are facing having some technical issues , Temporary Password reset service is not availble
+		   , Please Contact Helpdesk
+        </div>
+        {% endif %}>
+        {% endfor %}
+   
+    {% endif %}
 
 
 	<div class="container-contact100">

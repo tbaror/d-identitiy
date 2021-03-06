@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView
@@ -98,6 +99,7 @@ class ResetRequestForm(View):
     SVCUSER = config('SVCUSER')
     SVCPASS = config('SVCPASS')
     OTP_NUMLEN = config('OTP_NUMLEN')
+    FROM_EMAIL = config('FROM_EMAIL')
 
     def get(self, request):
         template_name = "resetform.html"
@@ -160,8 +162,28 @@ class ResetRequestForm(View):
                     
                     request.session['otp'] = otp = totp.now()
                     request.session['secret'] = secret
-
+                        
                     print('OTP code:', totp.now())
+                    
+                    #messages.warning(self.request, 'Sending OTP MAIL')
+                    messege_subject = 'OTP Code for {0}'.format(user_email[0])
+                    message_contact = 'Hello \n That’s your OTP Code Valid for next 5min : {0}'.format(totp.now())
+                    mail_from = self.FROM_EMAIL
+                    recipient_list = [user_email[0],]
+                        #fail_silently = False,
+                    try:    
+                        send_mail(
+                            messege_subject,
+                            message_contact,
+                            mail_from,
+                            recipient_list,
+                        )
+                    except Exception as e:
+                        messages.warning(self.request, e)
+                        time.sleep(3)
+                        return redirect('/')
+                        print(e)
+
                     return redirect('tokenchalenge')
                 else:
                     print('not match')
@@ -219,6 +241,10 @@ class TokenChalengeView(View):
 
 class ResetActionView(View):
     template_name = 'password_reset.html'
+    BASEDN= config('BASEDN')
+    AUTH_SRV = config('AUTH_SRV')
+    SVCUSER = config('SVCUSER')
+    SVCPASS = config('SVCPASS')
 
     def get(self, request):
 
