@@ -247,19 +247,52 @@ class ResetActionView(View):
     SVCPASS = config('SVCPASS')
 
     def get(self, request):
+        context = {}
 
-        user_email = request.session.get('email')
+        
+        context['email'] = user_email
         otp_resualt = request.session.get('otp_resualt')
         if otp_resualt==True and user_email != None:
-            pass
+            user_email = request.session.get('email')
         else:
             return redirect('/')
 
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, context)
 
     def post(self, request):
-        pass
+        if request.method == 'POST':
+             user_email = request.session.get('email')
+             pass_new = request.POST.get('up')
+             #Reset password Routine
+             try:
+                 tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1_2)
+                 s = Server(self.AUTH_SRV, get_info=ALL, use_ssl=True, tls=tls_configuration)
+                 c = Connection(s, user=self.SVCUSER, password=self.SVCPASS)
+                 c.open()
+                 c.bind()
+                 SEARCHFILTER='(&(|(userPrincipalName='+user_email+')(samaccountname='+user_email+')(mail='+user_email+'))(objectClass=person))'
+
+                 USER_DN=""
+                 c.search(search_base = self.BASEDN,
+                    search_filter = SEARCHFILTER,
+                    search_scope = SUBTREE,
+                    attributes = ['cn', 'givenName'],
+                    paged_size = 5)
+                 
+                 for entry in c.response:
+                     if entry.get("dn") and entry.get("attributes"):
+                         if entry.get("attributes").get("cn"):
+                             USER_DN=entry.get("dn")
+
+                 print (USER_DN)
+                 c.extend.microsoft.modify_password(USER_DN, pass_new)
+                 print(c.result)
+                 c.unbind()
+             except Exception as e:
+                print(e)
+        return render(request, self.template_name)     
 
 
-                  
+
+            
