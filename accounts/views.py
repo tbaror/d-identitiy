@@ -249,11 +249,12 @@ class ResetActionView(View):
     def get(self, request):
         context = {}
 
-        
+        user_email = request.session.get('email')        
         context['email'] = user_email
         otp_resualt = request.session.get('otp_resualt')
         if otp_resualt==True and user_email != None:
-            user_email = request.session.get('email')
+            pass
+            
         else:
             return redirect('/')
 
