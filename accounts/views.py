@@ -39,9 +39,11 @@ class ChangeUserPassword(View):
     success_url = reverse_lazy('profile')
 
     def get(self, request):
-        """ current_user = request.user
-        context = {'form' : current_user} """
-        return render(request, self.template_name)
+        context = {}
+        current_user = request.user
+        
+        context['current_user'] = current_user
+        return render(request, self.template_name, context)
 
     def post(self, request):
         PassForm = ""
