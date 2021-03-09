@@ -73,6 +73,7 @@ ALLOWED_HOSTS = ['212.143.237.19']
 # Application definition
 
 INSTALLED_APPS = [
+    'widget_tweaks',
     'captcha',
     'django.contrib.admin',
     'django.contrib.auth',
