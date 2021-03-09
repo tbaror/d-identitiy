@@ -1,12 +1,13 @@
 asgiref==3.3.1
-python-decouple
 Django==3.1.7
 django-auth-ldap==2.3.0
+django-recaptcha==2.0.6
+django-widget-tweaks==1.4.8
+ldap3==2.9
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pyotp==2.6.0
+python-decouple==3.4
 python-ldap @ file:///C:/Projects/d-identitiy/python_ldap-3.3.1-cp39-cp39-win_amd64.whl
 pytz==2021.1
 sqlparse==0.4.1
-django-recaptcha
-ldap3
