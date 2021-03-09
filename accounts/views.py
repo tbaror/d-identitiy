@@ -1,8 +1,9 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.shortcuts import render
@@ -25,11 +26,15 @@ class UsersLoginView(LoginView):
     form_class = UserLoginForm
 
 
-class UserProfileView(TemplateView):
-    template_name = 'user-profile.html'    
+class UsersLogoutView(LogoutView):
+    template_name = "login.html"
+
+class UserProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'user-profile.html'
+    login_url = '/'    
 
 
-class ChangeUserPassword(View):
+class ChangeUserPassword(LoginRequiredMixin, View):
     info_sended = False
     template_name = "changepassword.html"
     AUTH_SERVER = config('AUTH_SERVER')
@@ -37,6 +42,7 @@ class ChangeUserPassword(View):
     BASEDN = config('BASEDN')
     #form_class = UserChangePasswordForm
     success_url = reverse_lazy('profile')
+    login_url = '/'
 
     def get(self, request):
         context = {}
