@@ -298,9 +298,36 @@ class ResetActionView(View):
                  c.extend.microsoft.modify_password(USER_DN, pass_new)
                  print(c.result)
                  c.unbind()
+                 request.session['stat_msg'] = "Password Reset completed Successfully."
+                 request.session['email'] = user_email
+                 redirect('opstatus')
              except Exception as e:
                 print(e)
-        return render(request, self.template_name)     
+        return render(request, self.template_name)
+
+
+class OperationStatusView(View):
+    template_name = 'ops_status.html'
+    
+    def get(self, request):
+
+        context = {}
+        user_email = request.session.get('email')
+        status_msg = request.session.get('stat_msg')
+        
+        if user_email == None:
+            redirect('/')
+
+        context['user_email'] = user_email
+        context['stat_msg'] = status_msg
+
+        return render(request, self.template_name, context)
+
+
+
+    def post(self, request):
+        pass
+
 
 
 
