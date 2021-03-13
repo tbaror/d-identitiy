@@ -1,3 +1,4 @@
+from . models import *
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -36,6 +37,7 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
 
 
 class ChangeUserPassword(LoginRequiredMixin, View):
+    
     info_sended = False
     template_name = "changepassword.html"
     AUTH_SERVER = config('AUTH_SERVER')
@@ -89,7 +91,11 @@ class ChangeUserPassword(LoginRequiredMixin, View):
                             USER_DN=entry.get("dn")
                 
                 print (c.extend.microsoft.modify_password(USER_DN, NEWPWD, CURREENTPWD))
+                ip = request.META.get('REMOTE_ADDR')
+                print(ip)
                 messages.success(self.request, 'Password has been changed successfully.')
+                request.session['stat_msg'] = "Change Password completed Successfully."
+                request.session['email'] = USER
                 return redirect('opschange')
                 
             except Exception as e:
