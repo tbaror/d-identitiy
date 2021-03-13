@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
@@ -89,6 +90,7 @@ class ChangeUserPassword(LoginRequiredMixin, View):
                 
                 print (c.extend.microsoft.modify_password(USER_DN, NEWPWD, CURREENTPWD))
                 messages.success(self.request, 'Password has been changed successfully.')
+                return redirect('opschange')
                 
             except Exception as e:
                 messages.warning(self.request, e)
@@ -300,26 +302,30 @@ class ResetActionView(View):
                  c.unbind()
                  request.session['stat_msg'] = "Password Reset completed Successfully."
                  request.session['email'] = user_email
-                 redirect('opstatus')
+                 request.session['ops_type'] = 'reset'
+
+                 return redirect('opstatus')
              except Exception as e:
                 print(e)
+          
         return render(request, self.template_name)
 
 
 class OperationStatusView(View):
-    template_name = 'ops_status.html'
+    template_name = 'ops_reset.html'
     
     def get(self, request):
 
         context = {}
         user_email = request.session.get('email')
         status_msg = request.session.get('stat_msg')
-        
-        if user_email == None:
-            redirect('/')
-
+        ops_type = request.session.get('ops_type')
         context['user_email'] = user_email
         context['stat_msg'] = status_msg
+        
+        
+        if request.session.get('email') == None:
+            redirect('/')
 
         return render(request, self.template_name, context)
 
@@ -329,6 +335,28 @@ class OperationStatusView(View):
         pass
 
 
+class OpsChangeView(View):
+    template_name = 'ops_change.html'
+    
+    def get(self, request):
+
+        context = {}
+        user_email = request.session.get('email')
+        status_msg = request.session.get('stat_msg')
+        #ops_type = request.session.get('ops_type')
+        context['user_email'] = user_email
+        context['stat_msg'] = status_msg
+        
+        
+        if request.session.get('email') == None:
+            redirect('/')
+
+        return render(request, self.template_name, context)
+
+
+
+    def post(self, request):
+        pass
 
 
             
