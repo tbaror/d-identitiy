@@ -13,7 +13,7 @@ class PassEvents(models.Model):
     user_browser = models.CharField(max_length=200)
     user_os = models.CharField(max_length=200)
     user_agent = models.CharField(max_length=200)
-    user_reset_reason = models.TextField(max_length=500,default=None)
+    user_reset_reason = models.TextField(max_length=500,default=None, null=True, blank=True)
 
     def __str__(self):
         return self.user_related_event

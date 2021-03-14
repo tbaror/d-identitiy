@@ -19,6 +19,7 @@ import pyotp
 from ldap3 import *
 from decouple import config
 import ssl
+from django_user_agents.utils import get_user_agent
 
 
 class UsersLoginView(LoginView):
@@ -38,13 +39,14 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
 
 class ChangeUserPassword(LoginRequiredMixin, View):
     
+    model = PassEvents()
     info_sended = False
     template_name = "changepassword.html"
     AUTH_SERVER = config('AUTH_SERVER')
     AUTH_SRV = config('AUTH_SRV')
     BASEDN = config('BASEDN')
     #form_class = UserChangePasswordForm
-    success_url = reverse_lazy('profile')
+    #success_url = reverse_lazy('profile')
     login_url = '/'
 
     def get(self, request):
@@ -96,6 +98,19 @@ class ChangeUserPassword(LoginRequiredMixin, View):
                 messages.success(self.request, 'Password has been changed successfully.')
                 request.session['stat_msg'] = "Change Password completed Successfully."
                 request.session['email'] = USER
+                #event writing 
+                self.model.user_related_event = USER
+                self.model.ip_source = ip
+                self.model.pass_event_type = 'change password'
+                #agent details
+                self.model.user_browser = request.user_agent.browser.family
+                self.model.user_os = request.user_agent.os.family
+                self.model.user_agent = request.user_agent.device.family
+            
+                self.model.save()
+
+
+                #self.model.
                 return redirect('opschange')
                 
             except Exception as e:
@@ -310,7 +325,7 @@ class ResetActionView(View):
                  request.session['email'] = user_email
                  request.session['ops_type'] = 'reset'
 
-                 return redirect('opstatus')
+                 return redirect('opsreset')
              except Exception as e:
                 print(e)
           
