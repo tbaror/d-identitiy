@@ -1,5 +1,7 @@
+from . models import *
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
@@ -35,6 +37,7 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
 
 
 class ChangeUserPassword(LoginRequiredMixin, View):
+    
     info_sended = False
     template_name = "changepassword.html"
     AUTH_SERVER = config('AUTH_SERVER')
@@ -88,7 +91,12 @@ class ChangeUserPassword(LoginRequiredMixin, View):
                             USER_DN=entry.get("dn")
                 
                 print (c.extend.microsoft.modify_password(USER_DN, NEWPWD, CURREENTPWD))
+                ip = request.META.get('REMOTE_ADDR')
+                print(ip)
                 messages.success(self.request, 'Password has been changed successfully.')
+                request.session['stat_msg'] = "Change Password completed Successfully."
+                request.session['email'] = USER
+                return redirect('opschange')
                 
             except Exception as e:
                 messages.warning(self.request, e)
@@ -298,10 +306,63 @@ class ResetActionView(View):
                  c.extend.microsoft.modify_password(USER_DN, pass_new)
                  print(c.result)
                  c.unbind()
+                 request.session['stat_msg'] = "Password Reset completed Successfully."
+                 request.session['email'] = user_email
+                 request.session['ops_type'] = 'reset'
+
+                 return redirect('opstatus')
              except Exception as e:
                 print(e)
-        return render(request, self.template_name)     
+          
+        return render(request, self.template_name)
 
+
+class OperationStatusView(View):
+    template_name = 'ops_reset.html'
+    
+    def get(self, request):
+
+        context = {}
+        user_email = request.session.get('email')
+        status_msg = request.session.get('stat_msg')
+        ops_type = request.session.get('ops_type')
+        context['user_email'] = user_email
+        context['stat_msg'] = status_msg
+        
+        
+        if request.session.get('email') == None:
+            redirect('/')
+
+        return render(request, self.template_name, context)
+
+
+
+    def post(self, request):
+        pass
+
+
+class OpsChangeView(View):
+    template_name = 'ops_change.html'
+    
+    def get(self, request):
+
+        context = {}
+        user_email = request.session.get('email')
+        status_msg = request.session.get('stat_msg')
+        #ops_type = request.session.get('ops_type')
+        context['user_email'] = user_email
+        context['stat_msg'] = status_msg
+        
+        
+        if request.session.get('email') == None:
+            redirect('/')
+
+        return render(request, self.template_name, context)
+
+
+
+    def post(self, request):
+        pass
 
 
             

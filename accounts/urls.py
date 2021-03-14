@@ -12,6 +12,9 @@ urlpatterns = [
     path("resetpass/", ResetRequestForm.as_view(), name="resetpass"),
     path("tokenchalenge/", TokenChalengeView.as_view(), name="tokenchalenge"),
     path("resetaction/", ResetActionView.as_view(), name="resetaction"),
+    path("opsreset/", OperationStatusView.as_view(), name="opsreset"),
+    path("opschange/", OpsChangeView.as_view(), name="opschange"),
+
 
 
     # path('signup/', SignUpView.as_view(), name='signup'),
