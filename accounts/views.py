@@ -19,7 +19,7 @@ import pyotp
 from ldap3 import *
 from decouple import config
 import ssl
-from django_user_agents.utils import get_user_agent
+#from django_user_agents.utils import get_user_agent
 
 
 class UsersLoginView(LoginView):
@@ -34,7 +34,13 @@ class UsersLogoutView(LogoutView):
 
 class UserProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'user-profile.html'
-    login_url = '/'    
+    login_url = '/'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserProfileView, self).get_context_data(**kwargs)
+
+        context['objtasks'] = MainTask.objects.all()
+        return context
 
 
 class ChangeUserPassword(LoginRequiredMixin, View):
@@ -94,7 +100,7 @@ class ChangeUserPassword(LoginRequiredMixin, View):
                 
                 print (c.extend.microsoft.modify_password(USER_DN, NEWPWD, CURREENTPWD))
                 ip = request.META.get('REMOTE_ADDR')
-                print(ip)
+                #print(ip)
                 messages.success(self.request, 'Password has been changed successfully.')
                 request.session['stat_msg'] = "Change Password completed Successfully."
                 request.session['email'] = USER
@@ -271,6 +277,7 @@ class TokenChalengeView(View):
 
 
 class ResetActionView(View):
+    model = PassEvents()
     template_name = 'password_reset.html'
     BASEDN= config('BASEDN')
     AUTH_SRV = config('AUTH_SRV')
@@ -324,6 +331,17 @@ class ResetActionView(View):
                  request.session['stat_msg'] = "Password Reset completed Successfully."
                  request.session['email'] = user_email
                  request.session['ops_type'] = 'reset'
+                 ip = request.META.get('REMOTE_ADDR')   
+                 #event writing 
+                 self.model.user_related_event = user_email
+                 self.model.ip_source = ip
+                 self.model.pass_event_type = 'reset password'
+                 #agent details
+                 self.model.user_browser = request.user_agent.browser.family
+                 self.model.user_os = request.user_agent.os.family
+                 self.model.user_agent = request.user_agent.device.family
+            
+                 self.model.save()
 
                  return redirect('opsreset')
              except Exception as e:
