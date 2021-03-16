@@ -39,7 +39,7 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(UserProfileView, self).get_context_data(**kwargs)
 
-        context['objtasks'] = MainTask.objects.all()
+        context['objtasks'] = 'MainTask.objects.all()'
         return context
 
 

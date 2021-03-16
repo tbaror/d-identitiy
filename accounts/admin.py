@@ -8,7 +8,7 @@ from .models import PassEvents
 class EventsAdmin(admin.ModelAdmin):
     list_display = ('user_related_event','pass_event_type', 'event_stamp', 'user_related_event','ip_source','user_browser','user_os','user_agent','user_reset_reason',)
     search_fields = ('user_related_event','pass_event_type', 'event_stamp', 'user_related_event','ip_source','user_browser','user_os','user_agent','user_reset_reason',)
-    readonly_fields = ('user_related_event','pass_event_type', 'event_stamp', 'user_related_event','ip_source','user_browser','user_os','user_agent','user_reset_reason',)
+    #readonly_fields = ('user_related_event','pass_event_type', 'event_stamp', 'user_related_event','ip_source','user_browser','user_os','user_agent','user_reset_reason',)
 
 admin.site.register(PassEvents, EventsAdmin)
 
