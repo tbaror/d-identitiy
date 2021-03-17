@@ -64,7 +64,7 @@ class ChangeUserPassword(LoginRequiredMixin, View):
 
     def post(self, request):
         PassForm = ""
-        #form = PassForm()
+
         if request.method == 'POST':
             current_password = request.POST.get('current_password')
             new_password = request.POST.get('user_password')
