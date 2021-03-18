@@ -45,7 +45,7 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
 
 class ChangeUserPassword(LoginRequiredMixin, View):
     
-    model = PassEvents()
+    
     info_sended = False
     template_name = "changepassword.html"
     AUTH_SERVER = config('AUTH_SERVER')
@@ -63,6 +63,7 @@ class ChangeUserPassword(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request):
+        model = PassEvents()
         PassForm = ""
 
         if request.method == 'POST':
@@ -105,15 +106,15 @@ class ChangeUserPassword(LoginRequiredMixin, View):
                 request.session['stat_msg'] = "Change Password completed Successfully."
                 request.session['email'] = USER
                 #event writing 
-                self.model.user_related_event = USER
-                self.model.ip_source = ip
-                self.model.pass_event_type = 'change password'
+                model.user_related_event = USER
+                model.ip_source = ip
+                model.pass_event_type = 'change password'
                 #agent details
-                self.model.user_browser = request.user_agent.browser.family
-                self.model.user_os = request.user_agent.os.family
-                self.model.user_agent = request.user_agent.device.family
+                model.user_browser = request.user_agent.browser.family
+                model.user_os = request.user_agent.os.family
+                model.user_agent = request.user_agent.device.family
             
-                self.model.save()
+                model.save()
 
 
                 #self.model.
