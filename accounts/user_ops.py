@@ -1,9 +1,10 @@
 
-
+from ldap3 import *
+import ssl
 
 class LdapOpertions():
 
-    def __init__(self, SvcUser, SvcPassword, RequestUser, RequestUserPass=None, LdapServer, BaseDn):
+    def __init__(self,LdapServer, BaseDn, SvcUser, SvcPassword, RequestUser,RequestUserPass=None):
 
         self.SvcUser = SvcUser
         self.SvcPassword = SvcPassword
@@ -44,15 +45,55 @@ class LdapOpertions():
                             search_scope=BASE,
                             attributes='*'
                             )
+                        user_info['status'] = True
+                        
+                        try:
 
-                        user_info['user_email'] = c.entries[0].mail.values
-                        user_info['user_givenname'] = c.entries[0].givenName.values
-                        user_info['user_sn'] = c.entries[0].sn.values
-                        user_info['country']= c.entries[0].co.values
-                        user_info['address'] = c.entries[0].streetAddress.values
-                        user_info['telephoneNumber'] = c.entries[0].telephoneNumber.values
-                        user_info['department'] = c.entries[0].department.values
-                        user_info['title'] = c.entries[0].title.values
+                            user_info['user_email'] = c.entries[0].mail.values
+                        except Exception as e:
+                            user_info['user_email'] ='No Mail Field'
+
+                        try:
+
+                            user_info['user_givenname'] = c.entries[0].givenName.values
+                        except Exception as e:
+                            user_info['user_givenname'] = 'No Given Name Field'
+
+                        try:
+                            user_info['user_sn'] = c.entries[0].sn.values
+                        except Exception as e:
+
+                            user_info['user_sn'] = 'No User Sure Name Field'
+
+                        
+                        try:
+                            user_info['country']= c.entries[0].co.values
+                            
+                        except Exception as e:
+                            user_info['country']='No Country Field'
+                        
+                        try:
+
+                            user_info['address'] = c.entries[0].streetAddress.values
+                        except Exception as e:
+                            user_info['address'] = 'No Address Field'
+
+                        try:
+
+                            user_info['telephoneNumber'] = c.entries[0].telephoneNumber.values
+                        except Exception as e:
+                            user_info['telephoneNumber'] = 'No Telephone Field'
+
+                        try:
+
+                            user_info['department'] = c.entries[0].department.values
+                        except Exception as e:
+                            user_info['department'] = 'No Depatment Field'
+
+                        try:
+                            user_info['title'] = c.entries[0].title.values
+                        except Exception as e:
+                            user_info['title'] = 'No Title Field'
                 
                         c.unbind()
                         
@@ -60,7 +101,10 @@ class LdapOpertions():
             return user_info       
 
         except Exception as e:
-            pass            
+            user_info['status'] = False
+            user_info['error'] = e
+            print(e)
+            return user_info            
 
         
 

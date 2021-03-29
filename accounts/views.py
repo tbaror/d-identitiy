@@ -1,4 +1,5 @@
 from . models import *
+from .user_ops import *
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -35,10 +36,19 @@ class UsersLogoutView(LogoutView):
 class UserProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'user-profile.html'
     login_url = '/'
+    AUTH_SRV = config('AUTH_SRV')
+    BASEDN = config('BASEDN')
+    SVCUSER = config('SVCUSER')
+    SVCPASS = config('SVCPASS')
+    DOMAIN_NAME = config('DOMAIN_NAME')
 
     def get_context_data(self, **kwargs):
         context = super(UserProfileView, self).get_context_data(**kwargs)
-
+        
+        profileuser = str(self.request.user) + self.DOMAIN_NAME
+        UserProfileData  = LdapOpertions(self.AUTH_SRV, self.BASEDN, self.SVCUSER, self.SVCPASS, profileuser)
+        get_data = UserProfileData.query_user_attrib()
+        print(get_data)
         context['objtasks'] = 'MainTask.objects.all()'
         return context
 
