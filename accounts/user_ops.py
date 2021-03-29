@@ -15,6 +15,7 @@ class LdapOpertions():
     
     def query_user_attrib(self):
         try:
+            user_info = {}
             #Try to connect
             USER_DN = ""
             user_attrib = []
@@ -44,12 +45,22 @@ class LdapOpertions():
                             attributes='*'
                             )
 
-                        user_email = c.entries[0].mail.values
-                        user_givenname = c.entries[0].givenName.values
-                        user_sn = c.entries[0].sn.values
+                        user_info['user_email'] = c.entries[0].mail.values
+                        user_info['user_givenname'] = c.entries[0].givenName.values
+                        user_info['user_sn'] = c.entries[0].sn.values
+                        user_info['country']= c.entries[0].co.values
+                        user_info['address'] = c.entries[0].streetAddress.values
+                        user_info['telephoneNumber'] = c.entries[0].telephoneNumber.values
+                        user_info['department'] = c.entries[0].department.values
+                        user_info['title'] = c.entries[0].title.values
                 
                         c.unbind()
                         
+                        
+            return user_info       
+
+        except Exception as e:
+            pass            
 
         
 
