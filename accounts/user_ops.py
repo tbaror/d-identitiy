@@ -48,8 +48,8 @@ class LdapOpertions():
                         user_info['status'] = True
                         
                         try:
-
-                            user_info['user_email'] = c.entries[0].mail.values
+                            temp = c.entries[0].mail.values
+                            user_info['user_email'] = temp[0]
                         except Exception as e:
                             user_info['user_email'] ='No Mail Field'
 
@@ -85,8 +85,8 @@ class LdapOpertions():
                             user_info['telephoneNumber'] = 'No Telephone Field'
 
                         try:
-
-                            user_info['department'] = c.entries[0].department.values
+                            temp = c.entries[0].department.values
+                            user_info['department'] = temp[0]
                         except Exception as e:
                             user_info['department'] = 'No Depatment Field'
 
