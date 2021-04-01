@@ -48,7 +48,7 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
         UserProfileData  = LdapOpertions(self.AUTH_SRV, self.BASEDN, self.SVCUSER, self.SVCPASS, profileuser)
         context = UserProfileData.query_user_attrib()
         print(context)
-        context['objtasks'] = 'MainTask.objects.all()'
+        context['usr_reevts'] = PassEvents.objects.filter(user_related_event__exact=profileuser)
         print(context)
         return context
 
