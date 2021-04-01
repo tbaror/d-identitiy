@@ -14,7 +14,6 @@ from django.views import View
 from django.urls import reverse_lazy
 from django.views import generic
 from .forms import *
-#import ldap3
 import time
 import pyotp
 from ldap3 import *
@@ -47,9 +46,10 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
         
         profileuser = str(self.request.user) + self.DOMAIN_NAME
         UserProfileData  = LdapOpertions(self.AUTH_SRV, self.BASEDN, self.SVCUSER, self.SVCPASS, profileuser)
-        get_data = UserProfileData.query_user_attrib()
-        print(get_data)
+        context = UserProfileData.query_user_attrib()
+        print(context)
         context['objtasks'] = 'MainTask.objects.all()'
+        print(context)
         return context
 
 
