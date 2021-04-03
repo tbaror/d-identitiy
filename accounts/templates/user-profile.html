@@ -6,6 +6,8 @@
 {% block title %}User Profile{% endblock %}
 
 {% block content %}
+
+
 <link href="{% static 'assets/css/profileuser.css' %}" rel="stylesheet">
 <nav class="navbar navbar-light navbar-expand-md">
         <div class="container"><a class="navbar-brand" href="#"><img src="{% static 'assets/img/logo.png' %}" style="width: 100px;"></a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
@@ -70,7 +72,7 @@
                       <h6 class="mb-0">Full Name</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      Kenneth Valdez
+                      {{ user.first_name }} {{ user.last_name }}
                     </div>
                   </div>
                   <hr>
@@ -113,7 +115,53 @@
               </div>
              
             </div>
+            <div class="col-md-4"></div>
+            
+         
+            <div class="col-md-8 ">
+              {% if usr_reevts %}
+              <h5 class="text-center mb-2">{{ user.first_name }} {{ user.last_name }} Related Password Events</h5>
+              
+              <div class="bg-light">
+              <table id="zero_config" class="display table table-striped table-bordered table-hover" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>UserName</th>
+                        <th>Pass Event Type</th>
+                        <th>Date Time</th>
+                        <th>Soure IP</th>
+                        <th>OS Detected</th>
+                        <th>Password Reset reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {% for obj in usr_reevts %}
+                    <tr>
+                        <td>{{obj.user_related_event}}</td>
+                        <td>{{obj.pass_event_type}}</td>
+                        <td>{{obj.event_stamp}}</td>
+                        <td>{{obj.ip_source}}</td>
+                        <td>{{obj.user_os}}</td>
+                        <td>{{obj.user_reset_reason}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>UserName</th>
+                        <th>Pass Event Type</th>
+                        <th>Date Time</th>
+                        <th>Soure IP</th>
+                        <th>OS Detected</th>
+                        <th>Password Reset reason</th>
+                    </tr>
+                </tfoot>
+            </table>
+              </div>
+            {% endif %}
+            </div>
           </div>
         </div>
     </div>
+    
 {% endblock %}
