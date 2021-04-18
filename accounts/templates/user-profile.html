@@ -52,6 +52,7 @@
                       
                       <a class="btn btn-outline-primary" href="{% url 'logout' %}"><span><i class="fa fa-sign-out" aria-hidden="true"></i></span> LogOut</a>
                     </div>
+                    
                   </div>
                 </div>
               </div>
@@ -118,7 +119,12 @@
              
             </div>
             <div class="col-md-4"></div>
-            
+            {% if otp_obj %}
+              {% for objotp in otp_obj %}
+              <p>{{objotp.user}}</p>
+              <img src="{{ objotp.user_qr.url }}" alt="" style="width:290px;height:290px;>
+              {% endfor %}
+              {% endif %}
          
             <div class="col-md-8 ">
               {% if usr_reevts %}
