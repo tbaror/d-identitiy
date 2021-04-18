@@ -1,4 +1,5 @@
 
+from re import T
 from ldap3 import *
 import ssl
 
@@ -54,33 +55,35 @@ class LdapOpertions():
                             user_info['user_email'] ='No Mail Field'
 
                         try:
-
-                            user_info['user_givenname'] = c.entries[0].givenName.values
+                            temp = c.entries[0].givenName.values
+                            user_info['user_givenname'] = temp[0]
                         except Exception as e:
                             user_info['user_givenname'] = 'No Given Name Field'
 
                         try:
-                            user_info['user_sn'] = c.entries[0].sn.values
+                            temp = c.entries[0].sn.values
+                            user_info['user_sn'] = temp[0]
                         except Exception as e:
 
                             user_info['user_sn'] = 'No User Sure Name Field'
 
                         
                         try:
-                            user_info['country']= c.entries[0].co.values
+                            temp = c.entries[0].co.values
+                            user_info['country']= temp[0]
                             
                         except Exception as e:
                             user_info['country']='No Country Field'
                         
                         try:
-
-                            user_info['address'] = c.entries[0].streetAddress.values
+                            temp = c.entries[0].streetAddress.values  
+                            user_info['address'] = temp[0]
                         except Exception as e:
                             user_info['address'] = 'No Address Field'
 
                         try:
-
-                            user_info['telephoneNumber'] = c.entries[0].telephoneNumber.values
+                            temp = c.entries[0].telephoneNumber.values
+                            user_info['telephoneNumber'] = temp[0]
                         except Exception as e:
                             user_info['telephoneNumber'] = 'No Telephone Field'
 
@@ -91,7 +94,8 @@ class LdapOpertions():
                             user_info['department'] = 'No Depatment Field'
 
                         try:
-                            user_info['title'] = c.entries[0].title.values
+                            temp = c.entries[0].title.values
+                            user_info['title'] = temp[0]
                         except Exception as e:
                             user_info['title'] = 'No Title Field'
                 
