@@ -11,7 +11,7 @@ pyasn1
 pyasn1-modules
 pyotp
 python-decouple
-python-ldap @ file:///C:/Projects/d%40identity/python_ldap-3.3.1-cp39-cp39-win_amd64.whl
+#python-ldap @ file:///C:/Projects/d%40identity//python_ldap-3.3.1-cp39-cp39-win_amd64.whl
 pytz
 sqlparse
 ua-parser

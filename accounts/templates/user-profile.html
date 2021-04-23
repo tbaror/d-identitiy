@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static from static %}
+{% load qr_code %}
 
 
 
@@ -122,7 +123,8 @@
             {% if otp_obj %}
               {% for objotp in otp_obj %}
               <p>{{objotp.user}}</p>
-              <img src="{{ objotp.user_qr.url }}" alt="" style="width:290px;height:290px;>
+              {% qr_from_text objotp.user_auth_url size=8 border=6 image_format="png" error_correction="L" %}
+             
               {% endfor %}
               {% endif %}
          
