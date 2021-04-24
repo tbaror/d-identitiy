@@ -127,9 +127,17 @@
       <div class="row">
       <div class="col-md-4">
       {% if otp_obj %}
+      <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Click to reveal your personal QRCODE
+      </a>
         {% for objotp in otp_obj %}
-        <p>{{objotp.user}}</p>
-        {% qr_from_text objotp.user_auth_url  %}
+        
+        <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          {% qr_from_text objotp.user_auth_url size=12 border=6 %}
+      </div>
+      </div>
+        
        
         {% endfor %}
         {% endif %}
