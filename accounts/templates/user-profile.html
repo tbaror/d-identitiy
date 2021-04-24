@@ -119,59 +119,63 @@
               </div>
              
             </div>
-            <div class="col-md-4"></div>
-            {% if otp_obj %}
-              {% for objotp in otp_obj %}
-              <p>{{objotp.user}}</p>
-              {% qr_from_text objotp.user_auth_url size=8 border=6 image_format="png" error_correction="L" %}
-             
-              {% endfor %}
-              {% endif %}
-         
-            <div class="col-md-8 ">
-              {% if usr_reevts %}
-              <h5 class="text-center mb-2">{{ user.first_name }} {{ user.last_name }} Related Password Events</h5>
-              
-              <div class="bg-light">
-              <table id="zero_config" class="table table-striped table-bordered table-hover" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>UserName</th>
-                        <th>Pass Event Type</th>
-                        <th>Date Time</th>
-                        <th>Soure IP</th>
-                        <th>OS Detected</th>
-                        <th>Password Reset reason</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  {% for obj in usr_reevts %}
-                    <tr>
-                        <td>{{obj.user_related_event}}</td>
-                        <td>{{obj.pass_event_type}}</td>
-                        <td>{{obj.event_stamp}}</td>
-                        <td>{{obj.ip_source}}</td>
-                        <td>{{obj.user_os}}</td>
-                        <td>{{obj.user_reset_reason}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>UserName</th>
-                        <th>Pass Event Type</th>
-                        <th>Date Time</th>
-                        <th>Soure IP</th>
-                        <th>OS Detected</th>
-                        <th>Password Reset reason</th>
-                    </tr>
-                </tfoot>
-            </table>
-              </div>
-            {% endif %}
-            </div>
+           
           </div>
         </div>
     </div>
-    
+    <div class="container">
+      <div class="row">
+      <div class="col-md-4">
+      {% if otp_obj %}
+        {% for objotp in otp_obj %}
+        <p>{{objotp.user}}</p>
+        {% qr_from_text objotp.user_auth_url  %}
+       
+        {% endfor %}
+        {% endif %}
+      </div>
+      <div class="col-md-8 ">
+        {% if usr_reevts %}
+        <h5 class="text-center mb-2">{{ user.first_name }} {{ user.last_name }} Related Password Events</h5>
+        
+        <div class="bg-light">
+        <table id="zero_config" class="table table-striped table-bordered table-hover" style="width:100%">
+          <thead>
+              <tr>
+                  <th>UserName</th>
+                  <th>Pass Event Type</th>
+                  <th>Date Time</th>
+                  <th>Soure IP</th>
+                  <th>OS Detected</th>
+                  <th>Password Reset reason</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for obj in usr_reevts %}
+              <tr>
+                  <td>{{obj.user_related_event}}</td>
+                  <td>{{obj.pass_event_type}}</td>
+                  <td>{{obj.event_stamp}}</td>
+                  <td>{{obj.ip_source}}</td>
+                  <td>{{obj.user_os}}</td>
+                  <td>{{obj.user_reset_reason}}</td>
+              </tr>
+              {% endfor %}
+          </tbody>
+          <tfoot>
+              <tr>
+                  <th>UserName</th>
+                  <th>Pass Event Type</th>
+                  <th>Date Time</th>
+                  <th>Soure IP</th>
+                  <th>OS Detected</th>
+                  <th>Password Reset reason</th>
+              </tr>
+          </tfoot>
+      </table>
+        </div>
+      {% endif %}
+      </div>
+    </div>
+    </div>
 {% endblock %}
