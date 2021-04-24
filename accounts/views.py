@@ -287,7 +287,47 @@ class TokenChalengeView(View):
 
         return render(request, self.template_name, context)
 
+class GoogleAuthChalengeView(View):
+    
+    template_name = "token_chalenge.html"
+    OTP_NUMLEN = config('OTP_NUMLEN')
 
+
+    def get(self, request):
+
+        context = {}
+        
+        user_email = request.session.get('email')
+        if user_email == None:
+           return redirect('resetpass')
+        print(user_email)
+        context['form']= user_email
+
+        return render(request, self.template_name, context)
+
+
+
+    def post(self, request):
+        context = {}
+        token_resp = ""
+
+        if request.method == 'POST':
+            totp = pyotp.TOTP(request.session.get('secret'), interval=int(self.OTP_NUMLEN))
+
+            token_resp = str(request.POST.get('token_input'))
+            otp = totp.verify(token_resp)
+            if otp == True:
+                print('bingo')
+                request.session['otp_resualt'] = True
+
+                return redirect('resetaction')
+            else:
+                print('try again')
+                request.session['otp_resualt'] = False     
+
+            context['token_resp' ]= token_resp
+
+        return render(request, self.template_name, context)
 
 class ResetActionView(View):
     model = PassEvents()
