@@ -199,9 +199,12 @@ class ResetRequestForm(View):
                 user_email = c.entries[0].mail.values
                 user_givenname = c.entries[0].givenName.values
                 user_sn = c.entries[0].sn.values
+                sAMAccountName = c.entries[0].sAMAccountName.values
                 
                 c.unbind()
                 if email == user_email[0] and first_name == user_givenname[0] and last_name == user_sn[0]:
+                    user_id = User.objects.filter(usename__exaxt=sAMAccountName).values_list('id',flat=True)
+                    opt_method = OtpProfile.objects.filter(user__exaxt=int(user_id)).values_list('otp_method',flat=True)
                     print("match")
                     request.session['email'] = user_email[0]
 
