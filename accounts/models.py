@@ -31,29 +31,26 @@ class OtpProfile(models.Model):
 	DOMAIN_NAME = config('DOMAIN_NAME')
 	
 	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-
-	#qr_creation = otp_google_auth(secret, user)
+	OTP_METHOD_CHOICES = [
+    ('GO', 'GOOGLE AUTH'),
+    ('EM', 'EMAIL OTP'),
+    ]
+	
+	otp_method = models.CharField(max_length=2,choices=OTP_METHOD_CHOICES, default='GOOGLE AUTH')
+	
 	otp_code = models.CharField(max_length=200)
-	user_qr =  models.ImageField(upload_to='qrcodeimg/', blank=True)
+	
 	user_auth_url = models.CharField(max_length=300)
 	
 
 	def __str__(self):
 		return str(self.user)
-
+	
 
 	def save(self, *args, **kwargs):
 		secret = pyotp.random_base32()
 		self.otp_code = secret
 		googleauth = pyotp.totp.TOTP(secret).provisioning_uri(name=str(self.user) + self.DOMAIN_NAME, issuer_name='Secure Dalet')
 		self.user_auth_url = googleauth
-		""" qrcode_img = qrcode.make(googleauth)
-		canvas = Image.new('RGB', (qrcode_img.pixel_size, qrcode_img.pixel_size), 'white')
 		
-		canvas.paste(qrcode_img)
-		fname = f'qr_code-{self.user}.png'
-		buffer = BytesIO()
-		canvas.save(buffer, 'PNG')
-		self.user_qr.save(fname, File(buffer), save=False)
-		canvas.close() """
 		super().save(*args, **kwargs) 

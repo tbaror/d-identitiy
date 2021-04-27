@@ -213,7 +213,7 @@ class ResetRequestForm(View):
                     request.session['otp'] = otp = totp.now()
                     request.session['secret'] = secret
                         
-                    print('OTP code:', totp.now())
+                    #print('OTP code:', totp.now())
                     
                     #messages.warning(self.request, 'Sending OTP MAIL')
                     messege_subject = 'OTP Code for {0}'.format(user_email[0])
@@ -237,7 +237,7 @@ class ResetRequestForm(View):
                     return redirect('tokenchalenge')
                 else:
                     print('not match')
-                    print( email , user_email[0], first_name, user_givenname[0], last_name, user_sn[0])
+                    #print( email , user_email[0], first_name, user_givenname[0], last_name, user_sn[0])
                 return render(request, template_name)
             except Exception as e:
                 print(e)
