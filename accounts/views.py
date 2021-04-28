@@ -202,42 +202,52 @@ class ResetRequestForm(View):
                 sAMAccountName = c.entries[0].sAMAccountName.values
                 
                 c.unbind()
+                #Comparing reset form to AD details
                 if email == user_email[0] and first_name == user_givenname[0] and last_name == user_sn[0]:
-                    user_id = User.objects.filter(usename__exaxt=sAMAccountName).values_list('id',flat=True)
-                    opt_method = OtpProfile.objects.filter(user__exaxt=int(user_id)).values_list('otp_method',flat=True)
-                    print("match")
-                    request.session['email'] = user_email[0]
-
-                    secret = pyotp.random_base32()
-                    totp = pyotp.TOTP(secret, interval=int(self.OTP_NUMLEN))
-                    now = time.time()
-                    totp.at(now)
+                    user_id = User.objects.filter(username__exact=sAMAccountName[0]).values_list('id',flat=True)
                     
-                    request.session['otp'] = otp = totp.now()
-                    request.session['secret'] = secret
+                    opt_method = OtpProfile.objects.filter(user__exact=int(user_id[0])).values_list('otp_method',flat=True)
+                    user_key = OtpProfile.objects.filter(user__exact=int(user_id[0])).values_list('otp_code',flat=True)
+                    
+                    if opt_method[0] == 'EM':
+
+                    #print("match")
+                        #email reset method
+                        request.session['email'] = user_email[0]
+
+                        secret = user_key[0]
+                        totp = pyotp.TOTP(secret, interval=int(self.OTP_NUMLEN))
+                        now = time.time()
+                        totp.at(now)
                         
-                    #print('OTP code:', totp.now())
-                    
-                    #messages.warning(self.request, 'Sending OTP MAIL')
-                    messege_subject = 'OTP Code for {0}'.format(user_email[0])
-                    message_contact = 'Hello \n That’s your OTP Code Valid for next 5min : {0}'.format(totp.now())
-                    mail_from = self.FROM_EMAIL
-                    recipient_list = [user_email[0],]
-                        #fail_silently = False,
-                    try:    
-                        send_mail(
-                            messege_subject,
-                            message_contact,
-                            mail_from,
-                            recipient_list,
-                        )
-                    except Exception as e:
-                        messages.warning(self.request, e)
-                        time.sleep(3)
-                        return redirect('/')
-                        print(e)
+                        request.session['otp'] = otp = totp.now()
+                        request.session['secret'] = secret
+                            
+                        #print('OTP code:', totp.now())
+                        
+                        #messages.warning(self.request, 'Sending OTP MAIL')
+                        messege_subject = 'OTP Code for {0}'.format(user_email[0])
+                        message_contact = 'Hello \n That’s your OTP Code Valid for next 5min : {0}'.format(totp.now())
+                        mail_from = self.FROM_EMAIL
+                        recipient_list = [user_email[0],]
+                            #fail_silently = False,
+                        try:    
+                            send_mail(
+                                messege_subject,
+                                message_contact,
+                                mail_from,
+                                recipient_list,
+                            )
+                        except Exception as e:
+                            messages.warning(self.request, e)
+                            time.sleep(3)
+                            return redirect('/')
+                            print(e)
 
-                    return redirect('tokenchalenge')
+                        return redirect('tokenchalenge')
+
+                    elif opt_method == 'GOOGLE AUTH':
+                        pass
                 else:
                     print('not match')
                     #print( email , user_email[0], first_name, user_givenname[0], last_name, user_sn[0])
