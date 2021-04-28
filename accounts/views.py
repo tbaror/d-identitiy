@@ -208,13 +208,13 @@ class ResetRequestForm(View):
                     
                     opt_method = OtpProfile.objects.filter(user__exact=int(user_id[0])).values_list('otp_method',flat=True)
                     user_key = OtpProfile.objects.filter(user__exact=int(user_id[0])).values_list('otp_code',flat=True)
+                    request.session['email'] = user_email[0]
                     
                     if opt_method[0] == 'EM':
 
                     #print("match")
                         #email reset method
-                        request.session['email'] = user_email[0]
-
+                        
                         secret = user_key[0]
                         totp = pyotp.TOTP(secret, interval=int(self.OTP_NUMLEN))
                         now = time.time()
@@ -246,8 +246,10 @@ class ResetRequestForm(View):
 
                         return redirect('tokenchalenge')
 
-                    elif opt_method == 'GOOGLE AUTH':
-                        pass
+                    elif opt_method == 'GO':
+                        request.session['user_id'] = user_id[0]
+                        return redirect('googlechalenge')
+                        
                 else:
                     print('not match')
                     #print( email , user_email[0], first_name, user_givenname[0], last_name, user_sn[0])
@@ -312,7 +314,8 @@ class GoogleAuthChalengeView(View):
         
         user_email = request.session.get('email')
         if user_email == None:
-           return redirect('resetpass')
+            #redirect back to reset request form
+            return redirect('resetpass')
         print(user_email)
         context['form']= user_email
 
@@ -325,7 +328,8 @@ class GoogleAuthChalengeView(View):
         token_resp = ""
 
         if request.method == 'POST':
-            totp = pyotp.TOTP(request.session.get('secret'), interval=int(self.OTP_NUMLEN))
+            user_key = OtpProfile.objects.filter(user__exact=int(request.session.get('user_id')).values_list('otp_code',flat=True)
+            totp = pyotp.TOTP(user_key)
 
             token_resp = str(request.POST.get('token_input'))
             otp = totp.verify(token_resp)
@@ -415,6 +419,79 @@ class ResetActionView(View):
           
         return render(request, self.template_name)
 
+
+class GoogleResetActionView(View):
+    model = PassEvents()
+    template_name = 'password_reset.html'
+    BASEDN= config('BASEDN')
+    AUTH_SRV = config('AUTH_SRV')
+    SVCUSER = config('SVCUSER')
+    SVCPASS = config('SVCPASS')
+
+    def get(self, request):
+        context = {}
+
+        user_email = request.session.get('email')        
+        context['email'] = user_email
+        otp_resualt = request.session.get('otp_resualt')
+        if otp_resualt==True and user_email != None:
+            pass
+            
+        else:
+            return redirect('/')
+
+
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        if request.method == 'POST':
+             user_email = request.session.get('email')
+             pass_new = request.POST.get('up')
+             #Reset password Routine
+             try:
+                 tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1_2)
+                 s = Server(self.AUTH_SRV, get_info=ALL, use_ssl=True, tls=tls_configuration)
+                 c = Connection(s, user=self.SVCUSER, password=self.SVCPASS)
+                 c.open()
+                 c.bind()
+                 SEARCHFILTER='(&(|(userPrincipalName='+user_email+')(samaccountname='+user_email+')(mail='+user_email+'))(objectClass=person))'
+
+                 USER_DN=""
+                 c.search(search_base = self.BASEDN,
+                    search_filter = SEARCHFILTER,
+                    search_scope = SUBTREE,
+                    attributes = ['cn', 'givenName'],
+                    paged_size = 5)
+                 
+                 for entry in c.response:
+                     if entry.get("dn") and entry.get("attributes"):
+                         if entry.get("attributes").get("cn"):
+                             USER_DN=entry.get("dn")
+
+                 print (USER_DN)
+                 c.extend.microsoft.modify_password(USER_DN, pass_new)
+                 print(c.result)
+                 c.unbind()
+                 request.session['stat_msg'] = "Password Reset completed Successfully."
+                 request.session['email'] = user_email
+                 request.session['ops_type'] = 'reset'
+                 ip = request.META.get('REMOTE_ADDR')   
+                 #event writing 
+                 self.model.user_related_event = user_email
+                 self.model.ip_source = ip
+                 self.model.pass_event_type = 'reset password'
+                 #agent details
+                 self.model.user_browser = request.user_agent.browser.family
+                 self.model.user_os = request.user_agent.os.family
+                 self.model.user_agent = request.user_agent.device.family
+            
+                 self.model.save()
+
+                 return redirect('opsreset')
+             except Exception as e:
+                print(e)
+          
+        return render(request, self.template_name)
 
 class OperationStatusView(View):
     template_name = 'ops_reset.html'

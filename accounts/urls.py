@@ -12,6 +12,7 @@ urlpatterns = [
     path('changepass/', ChangeUserPassword.as_view(), name="changepass"),
     path("resetpass/", ResetRequestForm.as_view(), name="resetpass"),
     path("tokenchalenge/", TokenChalengeView.as_view(), name="tokenchalenge"),
+    path("googlechalenge/", GoogleAuthChalengeView, name="googlechalenge"),
     path("resetaction/", ResetActionView.as_view(), name="resetaction"),
     path("opsreset/", OperationStatusView.as_view(), name="opsreset"),
     path("opschange/", OpsChangeView.as_view(), name="opschange"),
