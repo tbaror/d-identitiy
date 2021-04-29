@@ -32,7 +32,7 @@ class OtpProfile(models.Model):
 	
 	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
 	OTP_METHOD_CHOICES = [
-    ('C', 'GOOGLE AUTH'),
+    ('GO', 'GOOGLE AUTH'),
     ('EM', 'EMAIL OTP'),
     ]
 	

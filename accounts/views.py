@@ -1,3 +1,4 @@
+from pyotp.totp import TOTP
 from . models import *
 from .user_ops import *
 from django.contrib import messages
@@ -209,6 +210,7 @@ class ResetRequestForm(View):
                     opt_method = OtpProfile.objects.filter(user__exact=int(user_id[0])).values_list('otp_method',flat=True)
                     user_key = OtpProfile.objects.filter(user__exact=int(user_id[0])).values_list('otp_code',flat=True)
                     request.session['email'] = user_email[0]
+                    print(opt_method)
                     
                     if opt_method[0] == 'EM':
 
@@ -246,7 +248,7 @@ class ResetRequestForm(View):
 
                         return redirect('tokenchalenge')
 
-                    elif opt_method == 'GO':
+                    elif opt_method[0] == 'GO':
                         request.session['user_id'] = user_id[0]
                         return redirect('googlechalenge')
                         
@@ -328,7 +330,8 @@ class GoogleAuthChalengeView(View):
         token_resp = ""
 
         if request.method == 'POST':
-            user_key = OtpProfile.objects.filter(user__exact=int(request.session.get('user_id')).values_list('otp_code',flat=True)
+            user_key = OtpProfile.objects.filter(user__exact=int(request.session.get('user_id'))).values_list('otp_code',flat=True)
+            
             totp = pyotp.TOTP(user_key)
 
             token_resp = str(request.POST.get('token_input'))
