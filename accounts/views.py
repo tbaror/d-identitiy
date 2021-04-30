@@ -313,6 +313,7 @@ class GoogleAuthChalengeView(View):
     def get(self, request):
 
         context = {}
+        print(request.session.get('email'))
         
         user_email = request.session.get('email')
         if user_email == None:
@@ -331,8 +332,8 @@ class GoogleAuthChalengeView(View):
 
         if request.method == 'POST':
             user_key = OtpProfile.objects.filter(user__exact=int(request.session.get('user_id'))).values_list('otp_code',flat=True)
-            
-            totp = pyotp.TOTP(user_key)
+            print(user_key)
+            totp = pyotp.TOTP(user_key[0])
 
             token_resp = str(request.POST.get('token_input'))
             otp = totp.verify(token_resp)

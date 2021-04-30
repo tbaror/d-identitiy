@@ -1,0 +1,1 @@
+OtpProfile.objects.filter(user__exact=4).values_list('otp_code',flat=True)
