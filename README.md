@@ -1,7 +1,7 @@
 # Django Project for Self service Password Change and Reset
 
 Project written form organization necessity for users self service password change and reset.
-Project make use mainly of Ldap3 and PyOtp library, gives users the ability to either change there own password or reset using either Google Autentication App or email type OTP , configured from adminstratos 
+Project make use mainly of <a href="https://ldap3.readthedocs.io/en/latest/">Ldap3</a> and <a href="https://github.com/pyauth/pyotp">PyOtp</a> libraries, gives users the ability to either change there own password or reset using either Google Autentication App or email type OTP , configured from adminstratos 
  control.
 <h3>login page</h3>
 <img src="propaimages/login_page.png" alt="" width="800" hight="800" srcset="">
