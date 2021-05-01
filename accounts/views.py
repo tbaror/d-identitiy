@@ -216,7 +216,7 @@ class ResetRequestForm(View):
 
                     #print("match")
                         #email reset method
-                        
+                        request.session['ms_method'] = 'Email just been sent with Token valid for  <strong> 5min</strong>, Please check your mailbox, including the spam folder'
                         secret = user_key[0]
                         totp = pyotp.TOTP(secret, interval=int(self.OTP_NUMLEN))
                         now = time.time()
@@ -250,6 +250,7 @@ class ResetRequestForm(View):
 
                     elif opt_method[0] == 'GO':
                         request.session['user_id'] = user_id[0]
+                        request.session['ms_method'] = 'Please Use your scanned QR code In GoogleAuthentication App'
                         return redirect('googlechalenge')
                         
                 else:
@@ -275,8 +276,8 @@ class TokenChalengeView(View):
         user_email = request.session.get('email')
         if user_email == None:
            return redirect('resetpass')
-        print(user_email)
-        context['form']= user_email
+        context['email']= user_email
+        context['ms_method'] = request.session.get('ms_method')
 
         return render(request, self.template_name, context)
 
@@ -320,7 +321,8 @@ class GoogleAuthChalengeView(View):
             #redirect back to reset request form
             return redirect('resetpass')
         print(user_email)
-        context['form']= user_email
+        context['email']= user_email
+        context['ms_method'] = request.session.get('ms_method')
 
         return render(request, self.template_name, context)
 
