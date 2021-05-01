@@ -12,7 +12,7 @@ Project make use mainly of ldap3 library and pytop, gives users the ability to e
 <h3>Personal profile with personal genrated QRcode</h3>
 <img src="propaimages/user_profile_withqr.png" alt="" width="800" hight="800" srcset="">
 <hr>
-<h3>User Change its own password</h3>
+<h3>User Can Change its own password</h3>
 <img src="propaimages/ch_pass_form.png" alt="" width="800" hight="800" srcset="">
 <hr>
 <h3>Password Reset request form</h3>
