@@ -1,7 +1,6 @@
-# Django Auth Tutorial source code
+# Django Project for Self service Password Change and Reset
 
-Accompanies the three-part series on [LearnDjango](https://learndjango.com).
+Project wreriten form organization necessity for users self service password change and reset.
+Project make use mainly of ldap3 library and pytop
 
-- [Part 1: Login/Logout](https://learndjango.com/tutorials/django-login-and-logout-tutorial)
-- [Part 2: Signup](https://learndjango.com/tutorials/django-signup-tutorial)
-- [Part 3: Password Reset](https://learndjango.com/tutorials/django-password-reset-tutorial)
+<img src="propaimages/login_page.png" alt="" sizes="" srcset="">
