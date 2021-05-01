@@ -14,5 +14,15 @@ Project make use mainly of ldap3 library and pytop,gives the possibilty to reset
 <hr>
 <h3>User Change its own password</h3>
 <img src="propaimages/ch_pass_form.png" alt="" width="800" hight="800" srcset="">
+<hr>
+<h3>Password Reset request form</h3>
+<img src="propaimages/pass_reset_form.png" alt="" width="800" hight="800" srcset="">
+<hr>
+<h3>MFA type Google and Email</h3>
+<img src="propaimages/email_otp.png" alt="" width="800" hight="800" srcset="">
+<img src="propaimages/google_ch.png" alt="" width="800" hight="800" srcset="">
+<hr>
+h3>Password Reset form</h3>
+<img src="propaimages/pass_resetchange.png" alt="" width="800" hight="800" srcset="">
 
 
