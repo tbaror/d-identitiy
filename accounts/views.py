@@ -308,7 +308,7 @@ class TokenChalengeView(View):
 class GoogleAuthChalengeView(View):
     
     template_name = "token_chalenge.html"
-    OTP_NUMLEN = config('OTP_NUMLEN')
+    GO_OTP_NUMLEN = config('GO_OTP_NUMLEN')
 
 
     def get(self, request):
@@ -335,7 +335,8 @@ class GoogleAuthChalengeView(View):
         if request.method == 'POST':
             user_key = OtpProfile.objects.filter(user__exact=int(request.session.get('user_id'))).values_list('otp_code',flat=True)
             print(user_key)
-            totp = pyotp.TOTP(user_key[0])
+            totp = pyotp.TOTP(user_key[0], interval=int(self.GO_OTP_NUMLEN))
+            print("Current OTP:", totp.now())
 
             token_resp = str(request.POST.get('token_input'))
             otp = totp.verify(token_resp)
@@ -346,7 +347,9 @@ class GoogleAuthChalengeView(View):
                 return redirect('resetaction')
             else:
                 print('try again')
-                request.session['otp_resualt'] = False     
+                request.session['otp_resualt'] = False
+                return redirect('googlechalenge')
+
 
             context['token_resp' ]= token_resp
 

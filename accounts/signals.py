@@ -17,7 +17,7 @@ def create_profile(sender, instance, created, **kwargs):
 def update_profile(sender, instance, created, **kwargs):
 	
 	if created == False:
-		instance.otpprofile.save()
+		#instance.otpprofile.save()
 		print('Profile updated!')
 
 
